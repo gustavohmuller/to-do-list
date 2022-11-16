@@ -1,21 +1,35 @@
-import 'package:hive/hive.dart';
+import 'package:flutter/foundation.dart';
+
+import 'package:hive_flutter/adapters.dart';
+
+import '../models/task.dart';
 
 class HiveDatabase {
-  var tasksBox = Hive.box('tasks');
+  Box<Task> tasksBox = Hive.box<Task>('tasksBox');
 
-  getTask({required task}) {
-    return tasksBox.get(task.id);
+  Task? getTask({required String title}) {
+    return tasksBox.get(title);
   }
 
-  addTask({required task}) async {
-    await tasksBox.put(task.id, task);
+  bool addTask({required Task task}) {
+    if (tasksBox.containsKey(task.title)) {
+      return false;
+    }
+
+    tasksBox.put(task.title, task);
+
+    return true;
   }
 
-  deleteTask({required task}) async {
-    await task.delete();
+  void deleteTask({required Task task}) {
+    task.delete();
   }
 
-  updateTask({required task}) async {
-    await task.save();
+  void updateTask({required Task task}) {
+    task.save();
+  }
+
+  ValueListenable<Box<Task>> listenToTask() {
+    return tasksBox.listenable();
   }
 }
