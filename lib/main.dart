@@ -1,9 +1,40 @@
 import 'package:flutter/material.dart';
 
-import 'package:to_do_list/screens/home_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'package:to_do_list/database/hive_database.dart';
+import 'package:to_do_list/models/task.dart';
+import 'package:to_do_list/screens/home_screen.dart';
+import 'package:to_do_list/utils/strings.dart';
+
+Future<void> main() async {
+  await Hive.initFlutter();
+
+  Hive.registerAdapter<Task>(TaskAdapter());
+
+  await Hive.openBox<Task>('tasksBox');
+
+  runApp(BaseWidget(child: const MyApp()));
+}
+
+class BaseWidget extends InheritedWidget {
+  BaseWidget({Key? key, required this.child}) : super(key: key, child: child);
+  final Widget child;
+  final HiveDatabase dataStore = HiveDatabase();
+
+  static BaseWidget of(BuildContext context) {
+    final base = context.dependOnInheritedWidgetOfExactType<BaseWidget>();
+    if (base != null) {
+      return base;
+    } else {
+      throw StateError;
+    }
+  }
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return false;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -11,13 +42,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'To-Do List App',
+    return const MaterialApp(
+      title: materialAppTitle,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
