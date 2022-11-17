@@ -4,6 +4,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:to_do_list/utils/strings.dart';
 
+import 'theme.dart';
 
 emptyFieldsAlert(context) {
   Alert(
@@ -23,21 +24,13 @@ emptyFieldsAlert(context) {
         radius: BorderRadius.circular(16.0),
         child: const Text(
           warningOkButton,
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: Style.textStyle12,
         ),
       )
     ],
     style: AlertStyle(
-        titleStyle: const TextStyle(
-          color: Color(0XFF2E3440),
-          fontSize: 24,
-          fontWeight: FontWeight.w500,
-        ),
-        descStyle: const TextStyle(
-          color: Color(0XFF2E3440),
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-        ),
+        titleStyle: Style.textStyle7,
+        descStyle: Style.textStyle10,
         alertBorder:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0))),
   ).show();
@@ -61,21 +54,13 @@ sameTitleAlert(context) {
         radius: BorderRadius.circular(16.0),
         child: const Text(
           warningOkButton,
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: Style.textStyle12,
         ),
       )
     ],
     style: AlertStyle(
-        titleStyle: const TextStyle(
-          color: Color(0XFF2E3440),
-          fontSize: 24,
-          fontWeight: FontWeight.w500,
-        ),
-        descStyle: const TextStyle(
-          color: Color(0XFF2E3440),
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-        ),
+        titleStyle: Style.textStyle7,
+        descStyle: Style.textStyle10,
         alertBorder:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0))),
   ).show();

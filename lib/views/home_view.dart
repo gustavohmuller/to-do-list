@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import 'package:intl/intl.dart';
 
 import 'package:to_do_list/main.dart';
 import 'package:to_do_list/utils/strings.dart';
+import 'package:to_do_list/utils/theme.dart';
 
+import '../components/empty_list.dart';
+import '../components/fab.dart';
+import '../components/tasks_list.dart';
 import '../models/task.dart';
-import '../widgets/fab.dart';
-import '../widgets/task_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,29 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final config = CalendarDatePicker2WithActionButtonsConfig(
     calendarType: CalendarDatePicker2Type.range,
-    dayTextStyle: const TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w400,
-      color: Color(0XFF2E3440),
-    ),
-    weekdayLabelTextStyle: const TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w500,
-      color: Color(0XFF2E3440),
-    ),
-    selectedDayTextStyle: const TextStyle(
-      fontSize: 16,
-      color: Colors.white,
-      fontWeight: FontWeight.w500,
-    ),
+    dayTextStyle: Style.textStyle1,
+    weekdayLabelTextStyle: Style.textStyle2,
+    selectedDayTextStyle: Style.textStyle3,
     selectedDayHighlightColor: const Color(0XFF2E3440),
     closeDialogOnCancelTapped: true,
-    cancelButtonTextStyle: const TextStyle(
-      fontWeight: FontWeight.w500,
-    ),
-    okButtonTextStyle: const TextStyle(
-      fontWeight: FontWeight.w500,
-    ),
+    cancelButtonTextStyle: Style.textStyle4,
+    okButtonTextStyle: Style.textStyle4,
   );
 
   List<DateTime?> initialValues = [
@@ -88,12 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    DateFormat.yMMMMEEEEd().format(DateTime.now()),
-                    style: const TextStyle(
-                      color: Color(0XFF2E3440),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    now,
+                    style: Style.textStyle2,
                   ),
                   const SizedBox(height: 8.0),
                   Row(
@@ -105,20 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           const Text(
-                            'Tasks',
-                            style: TextStyle(
-                              color: Color(0XFF2E3440),
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            tasksHeader,
+                            style: Style.textStyle5,
                           ),
                           Text(
                             '${numberOfdoneTasks(tasksList)} of ${tasksList.length} done',
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 16,
-                            ),
-                          )
+                            style: Style.textStyle6,
+                          ),
                         ],
                       ),
                       const SizedBox(width: 16.0),
@@ -128,8 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: CircularProgressIndicator(
                           color: const Color(0XFF2E3440),
                           backgroundColor: Colors.grey[300],
-                          value: numberOfdoneTasks(tasksList) /
-                              numberOfTasks(tasksList),
+                          value: tasksIndicator(tasksList),
                         ),
                       ),
                     ],
@@ -144,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0XFF2E3440).withOpacity(0.05),
+                                color:
+                                    const Color(0XFF2E3440).withOpacity(0.05),
                                 offset: const Offset(0, 3),
                                 blurRadius: 16,
                               ),
@@ -163,19 +137,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: BorderStyle.none,
                                   )),
                               hintText: hintTextSearchBar,
-                              hintStyle: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey[400],
-                              ),
+                              hintStyle: Style.textStyle6,
                               fillColor: Colors.white,
                               filled: true,
                             ),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0XFF2E3440),
-                            ),
+                            style: Style.textStyle1,
                             onChanged: (value) {
                               setState(() {
                                 searchValue = value;
@@ -201,18 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            showCalendarDatePicker2Dialog(
-                              context: context,
-                              config: config,
-                              dialogSize: const Size(325, 400),
-                              borderRadius: BorderRadius.circular(15),
-                              dialogBackgroundColor: Colors.white,
-                              initialValue: initialValues,
-                            ).then((value) {
-                              if (value != null) {
-                                return _onSelectionChanged(value);
-                              }
-                            });
+                            showCalendar(context);
                           },
                           icon: const Icon(
                             Icons.calendar_month_outlined,
@@ -225,57 +180,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 16.0),
                   tasksList.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 200,
-                              child: Image.asset(
-                                "assets/images/no_tasks.png",
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              noTasks,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.zero,
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: tasksList.length,
-                          itemBuilder: ((context, index) {
-                            Task task = tasksList[index];
-                            return Dismissible(
-                              background: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.delete),
-                                  SizedBox(width: 4.0),
-                                  Text(
-                                    taskDeleted,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0XFF2E3440),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              onDismissed: (direction) =>
-                                  base.dataStore.deleteTask(task: task),
-                              key: Key(task.title),
-                              child: TaskWidget(task: tasksList[index]),
-                            );
-                          }),
-                        ),
+                      ? const EmptyList()
+                      : TasksList(tasksList: tasksList, base: base),
                   const SizedBox(height: 60.0),
                 ],
               ),
@@ -285,6 +191,21 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  void showCalendar(BuildContext context) {
+    showCalendarDatePicker2Dialog(
+      context: context,
+      config: config,
+      dialogSize: const Size(325, 400),
+      borderRadius: BorderRadius.circular(15),
+      dialogBackgroundColor: Colors.white,
+      initialValue: initialValues,
+    ).then((value) {
+      if (value != null) {
+        return _onSelectionChanged(value);
+      }
+    });
   }
 
   numberOfTasks(List<Task> tasksList) {
@@ -323,5 +244,9 @@ class _HomeScreenState extends State<HomeScreen> {
             hours: 23, minutes: 59, seconds: 59, microseconds: 999999));
       }
     });
+  }
+
+  double tasksIndicator(List<Task> tasksList) {
+    return numberOfdoneTasks(tasksList) / numberOfTasks(tasksList);
   }
 }

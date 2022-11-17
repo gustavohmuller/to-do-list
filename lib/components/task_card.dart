@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:msh_checkbox/msh_checkbox.dart';
 
-import 'package:to_do_list/screens/task_screen.dart';
 import 'package:to_do_list/utils/strings.dart';
+import 'package:to_do_list/views/task_view.dart';
 
 import '../models/task.dart';
 import '../utils/colors.dart';
+import '../utils/theme.dart';
 
 class TaskWidget extends StatefulWidget {
   const TaskWidget({super.key, required this.task});
@@ -119,11 +120,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                     const SizedBox(width: 4.0),
                     Text(
                       taskExpirationDate(),
-                      style: const TextStyle(
-                        color: Color(0XFF2E3440),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: Style.textStyle1,
                     ),
                   ],
                 ),

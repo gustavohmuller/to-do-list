@@ -4,8 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:to_do_list/database/hive_database.dart';
 import 'package:to_do_list/models/task.dart';
-import 'package:to_do_list/screens/home_screen.dart';
 import 'package:to_do_list/utils/strings.dart';
+import 'package:to_do_list/views/home_view.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -14,11 +14,13 @@ Future<void> main() async {
 
   await Hive.openBox<Task>('tasksBox');
 
-  runApp(BaseWidget(child: const MyApp()));
+  runApp(BaseWidget(child: const ToDoListApp()));
 }
 
 class BaseWidget extends InheritedWidget {
   BaseWidget({Key? key, required this.child}) : super(key: key, child: child);
+  @override
+  // ignore: overridden_fields
   final Widget child;
   final HiveDatabase dataStore = HiveDatabase();
 
@@ -37,8 +39,8 @@ class BaseWidget extends InheritedWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ToDoListApp extends StatelessWidget {
+  const ToDoListApp({super.key});
 
   @override
   Widget build(BuildContext context) {

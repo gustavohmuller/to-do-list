@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 const String addNewTask = 'Add new task';
 const String addTask = 'Add task';
 const String confirmationDesc = 'Do You really want to delete the task?';
@@ -20,3 +22,5 @@ const String warningEmptyFieldsAlertDesc = 'You must fill all fields!';
 const String warningEmptyFieldsAlertTitle = 'Empty field(s)!';
 const String warningSameTitleAlertDesc = 'You already have a task with this title!';
 const String warningSameTitleAlertTitle = 'Task with same title!';
+String now = DateFormat.yMMMMEEEEd().format(DateTime.now());
+const String tasksHeader = 'Tasks';

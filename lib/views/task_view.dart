@@ -6,9 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:to_do_list/main.dart';
 import 'package:to_do_list/utils/alerts.dart';
 import 'package:to_do_list/utils/strings.dart';
+import 'package:to_do_list/utils/theme.dart';
 
 import '../models/task.dart';
 
+// ignore: must_be_immutable
 class TaskScreen extends StatefulWidget {
   TaskScreen({
     super.key,
@@ -42,7 +44,7 @@ class _TaskScreenState extends State<TaskScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const AppBar(),
+              AppBar(),
               const SizedBox(height: 16.0),
               Row(
                 children: [
@@ -55,11 +57,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   const SizedBox(width: 16.0),
                   Text(
                     isUpdatingTask() ? addNewTask : updateTask,
-                    style: const TextStyle(
-                      color: Color(0XFF2E3440),
-                      fontSize: 32,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Style.textStyle8,
                   ),
                   const SizedBox(width: 8.0),
                   const Expanded(
@@ -73,20 +71,12 @@ class _TaskScreenState extends State<TaskScreen> {
               const SizedBox(height: 40.0),
               const Text(
                 titleTask,
-                style: TextStyle(
-                  color: Color(0XFF2E3440),
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Style.textStyle9,
               ),
               TextFormField(
                 controller: widget.titleController,
                 maxLines: 2,
-                style: const TextStyle(
-                  color: Color(0XFF2E3440),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Style.textStyle10,
                 decoration: const InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0XFF2E3440)),
@@ -101,19 +91,12 @@ class _TaskScreenState extends State<TaskScreen> {
               const SizedBox(height: 40.0),
               const Text(
                 descriptionTask,
-                style: TextStyle(
-                  color: Color(0XFF2E3440),
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Style.textStyle9,
               ),
               TextFormField(
                 controller: widget.descriptionController,
                 maxLines: 4,
-                style: const TextStyle(
-                    color: Color(0XFF2E3440),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400),
+                style: Style.textStyle10,
                 decoration: const InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0XFF2E3440)),
@@ -156,22 +139,14 @@ class _TaskScreenState extends State<TaskScreen> {
                   child: Row(children: [
                     const Text(
                       date,
-                      style: TextStyle(
-                        color: Color(0XFF2E3440),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: Style.textStyle1
                     ),
                     Expanded(child: Container()),
                     SizedBox(
                       width: 180,
                       child: Text(
                         showExpirationDate(expirationDate),
-                        style: const TextStyle(
-                          color: Color(0XFF2E3440),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: Style.textStyle1,
                         textAlign: TextAlign.end,
                       ),
                     )
@@ -194,14 +169,6 @@ class _TaskScreenState extends State<TaskScreen> {
                       widget.titleController!.text.isNotEmpty &&
                       widget.descriptionController!.text.isNotEmpty) {
                     try {
-                      // final bool result = BaseWidget.of(context)
-                      //     .dataStore
-                      //     .updateTask(task: task);
-                      // if (result) {
-                      //   Navigator.of(context).pop();
-                      // } else {
-                      //   sameTitleAlert(context);
-                      // }
                       widget.titleController?.text = title!;
                       widget.descriptionController?.text = description!;
                       widget.task?.expirationDate = expirationDate!;
@@ -235,13 +202,9 @@ class _TaskScreenState extends State<TaskScreen> {
                 },
                 child: Text(
                   isUpdatingTask() ? addNewTask : updateTask,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: Style.textStyle11,
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -281,53 +244,4 @@ class _TaskScreenState extends State<TaskScreen> {
       return false;
     }
   }
-}
-
-class AppBar extends StatelessWidget with PreferredSizeWidget {
-  const AppBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0XFF2E3440),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            elevation: 0,
-            padding: const EdgeInsets.only(right: 12.0),
-          ),
-          child: Row(
-            children: const [
-              Icon(
-                color: Colors.white,
-                size: 40,
-                Icons.keyboard_arrow_left_rounded,
-              ),
-              Text(
-                'Go back',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
